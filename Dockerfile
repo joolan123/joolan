@@ -1,19 +1,6 @@
-FROM ghcr.io/mhsanaei/3x-ui:latest
+FROM ghcr.io/xtls/xray-core:26.7.11
 
-RUN apk add --no-cache nginx \
-    && mkdir -p /run/nginx \
-    /tmp/client_temp \
-    /tmp/proxy_temp
+COPY config.json /usr/local/etc/xray/config.json
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY start.sh /start.sh
-
-RUN chmod +x /start.sh
-
-ENV XUI_ENABLE_FAIL2BAN=false
-ENV XUI_SKIP_HSTS=true
-ENV XRAY_VMESS_AEAD_FORCED=false
-
-EXPOSE 8080
-
-ENTRYPOINT ["/start.sh"]
+ENTRYPOINT ["/usr/local/bin/xray"]
+CMD ["run", "-config", "/usr/local/etc/xray/config.json"]
